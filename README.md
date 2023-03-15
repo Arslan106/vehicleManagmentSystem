@@ -5,7 +5,7 @@ This is a React Native app for managing registered cars. The app includes a dash
 Installation
 
 Clone the repository:
-git clone https://github.com/your-username/your-project.git
+git clone https://github.com/Arslan106/vehicleManagmentSystem.git
 
 Install the dependencies:
 npm install
