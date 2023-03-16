@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
-import {Image, View, Alert} from 'react-native';
-import {Button, Footer} from '@src/commons';
-import {COLORS, IMAGES, ROUTES} from '@src/constants';
-import {Text, TextInput} from '@src/core-ui';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import React, { useState } from 'react';
+import { Image, View, Alert } from 'react-native';
+import { Button, Footer } from '@src/commons';
+import { COLORS, IMAGES, ROUTES } from '@src/constants';
+import { Text, TextInput } from '@src/core-ui';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { scale, storeData, verticalScale } from '@src/helpers';
 import { CommonActions } from '@react-navigation/native';
 
@@ -13,12 +13,13 @@ export const SignUp = (props) => {
   const [password, setPassword] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
-  // render
 
+  // its to validate email
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
+  // its to validate password but currently i am not validating the password
   const validatePassword = (password) => {
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
     return passwordRegex.test(password);
@@ -27,15 +28,18 @@ export const SignUp = (props) => {
     setEmail(email);
     setIsValidEmail(validateEmail(email));
   }
-
+  // setting password in state
   const handlePasswordChange = (password) => {
     setPassword(password);
     // setIsValidPassword(validatePassword(password));
   }
+  
+  // signup 
   const onSignUpBtnPress = () => {
- 
+
     try {
       if (!isValidEmail || email !== '' && password !== "") {
+        // dummy api url for signup
         fetch('http://restapi.adequateshop.com/api/authaccount/registration', {
           method: 'POST',
           headers: {
@@ -43,7 +47,7 @@ export const SignUp = (props) => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            name:username,
+            name: username,
             email: email,
             password: password
           })
@@ -51,7 +55,7 @@ export const SignUp = (props) => {
           .then((response) => response.json())
           .then((json) => {
             // handle the API response here
-            if(json?.data){
+            if (json?.data) {
               storeData('user', json?.data)
               props.navigation.dispatch(
                 CommonActions.reset({
@@ -61,7 +65,7 @@ export const SignUp = (props) => {
                   ],
                 })
               );
-            }else{
+            } else {
               Alert.alert('This user is already registerd')
             }
           })
@@ -74,49 +78,49 @@ export const SignUp = (props) => {
       } else {
         Alert.alert('Please enter values')
       }
-     
-    } catch (error) {}
+
+    } catch (error) { }
   };
 
   return (
-    <View style={{flex:1,marginTop:verticalScale(80)}}>
-    <KeyboardAwareScrollView
-      style={{flex: 1, paddingHorizontal: 20}}
-      keyboardShouldPersistTaps="always">
-      <Image
-        source={IMAGES.logo}
-        resizeMode={'contain'}
-        style={{height: 200, width: 200, alignSelf: 'center'}}
-      />
-       <View style={{marginTop:verticalScale(12)}}>
-      <TextInput
-        placeholder={'UserName'}
-        placeholderTextColor={COLORS.BLACK}
-        value={username}
-        onChangeText={text => {
-          setUsername(text);
-        }}
-      />
-      <TextInput
-        placeholder={'Email'}
-        placeholderTextColor={COLORS.BLACK}
-        value={email}
-        onChangeText={handleEmailChange}
-      />
-      {!isValidEmail && <Text customStyle={{color:COLORS.ERROR,fontSize:scale(10), padding:verticalScale(4)}}>Please enter a valid email address</Text>}
-      <TextInput
-        placeholder={'Password'}
-        placeholderTextColor={COLORS.BLACK}
-        value={password}
-        onChangeText={handlePasswordChange}
-      />
-       {/* {!isValidPassword && <Text customStyle={{color:COLORS.ERROR,fontSize:scale(10), padding:verticalScale(4)}}>Please enter a valid email password</Text>} */}
-      </View>
-      <Button onPress={onSignUpBtnPress}> Signup</Button>
-      <Footer footerText1={"Already have an account?"} footerText2={' Sign in'} onPress={()=>{
-        props.navigation.navigate(ROUTES.SIGN_IN)
-      }}/>
-    </KeyboardAwareScrollView>
+    <View style={{ flex: 1, marginTop: verticalScale(80) }}>
+      <KeyboardAwareScrollView
+        style={{ flex: 1, paddingHorizontal: 20 }}
+        keyboardShouldPersistTaps="always">
+        <Image
+          source={IMAGES.logo}
+          resizeMode={'contain'}
+          style={{ height: 200, width: 200, alignSelf: 'center' }}
+        />
+        <View style={{ marginTop: verticalScale(12) }}>
+          <TextInput
+            placeholder={'UserName'}
+            placeholderTextColor={COLORS.BLACK}
+            value={username}
+            onChangeText={text => {
+              setUsername(text);
+            }}
+          />
+          <TextInput
+            placeholder={'Email'}
+            placeholderTextColor={COLORS.BLACK}
+            value={email}
+            onChangeText={handleEmailChange}
+          />
+          {!isValidEmail && <Text customStyle={{ color: COLORS.ERROR, fontSize: scale(10), padding: verticalScale(4) }}>Please enter a valid email address</Text>}
+          <TextInput
+            placeholder={'Password'}
+            placeholderTextColor={COLORS.BLACK}
+            value={password}
+            onChangeText={handlePasswordChange}
+          />
+          {/* {!isValidPassword && <Text customStyle={{color:COLORS.ERROR,fontSize:scale(10), padding:verticalScale(4)}}>Please enter a valid email password</Text>} */}
+        </View>
+        <Button onPress={onSignUpBtnPress}> Signup</Button>
+        <Footer footerText1={"Already have an account?"} footerText2={' Sign in'} onPress={() => {
+          props.navigation.navigate(ROUTES.SIGN_IN)
+        }} />
+      </KeyboardAwareScrollView>
     </View>
   );
 };

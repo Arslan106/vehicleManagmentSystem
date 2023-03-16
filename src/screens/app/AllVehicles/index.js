@@ -12,13 +12,14 @@ export const AllVehicles = (props) => {
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const isFocused = useIsFocused();
-
+    // this is to get all vehicles every time the user focused this screen
     useEffect(() => {
         if (isFocused) {
             getAllCars();
         }
     }, [props, isFocused]);
 
+    // getting all stored cars from local storage
     const getAllCars = () => {
         getData('cars').then((cars) => {
             if (cars) {
@@ -30,17 +31,19 @@ export const AllVehicles = (props) => {
             }
         })
     }
+    // it will refresh the flatlist when the user delete any car
     const onRefresh = async () => {
         setRefreshing(true);
         await getAllCars();
         setRefreshing(false);
     };
+    // if theres no data in flatlist this section will show up
     const renderEmptyComponent = () => (
         <View style={{ marginTop: verticalScale(60), justifyContent: 'center', alignItems: 'center' }}>
             <Text customStyle={{ fontWeight: 'bold', color: COLORS.BLACK, fontSize: scale(16) }}>No data to display</Text>
         </View>
     );
-
+    // here rendering the flatlist data
     const renderItem = ({ item, index }) => (
         <View style={{ borderWidth: 1, borderColor: 'gray', borderRadius: scale(12), padding: scale(12), marginHorizontal: scale(12), marginBottom: allCars.length - 1 == index ? verticalScale(12) : 0, marginTop: verticalScale(12) }}>
             <View style={{ flexDirection: 'row', }}>
@@ -62,16 +65,16 @@ export const AllVehicles = (props) => {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Button customStyle={{ flex: 1, marginLRight: scale(12) }} onPress={() => {
                     let data = {
-                        carModel : {
+                        carModel: {
                             category: item.category,
                             color: item.color,
                             model: item.model,
                             make: item.make,
                             registrationNo: item.registrationNo,
                         },
-                        selectedIndex:index
+                        selectedIndex: index
                     }
-                    props.navigation.navigate(ROUTES.UPDATE_VEHICLE,{data} )
+                    props.navigation.navigate(ROUTES.UPDATE_VEHICLE, { data })
                 }}>Update</Button>
                 <Button customStyle={{ flex: 1, marginLeft: scale(12) }} onPress={() => {
                     setRefreshing(true)

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert ,TouchableOpacity, Image} from 'react-native';
+import { View, StyleSheet, Alert, TouchableOpacity, Image } from 'react-native';
 import { Button } from '@src/commons';
 import { COLORS, IMAGES, ROUTES } from '@src/constants';
 import { Text, TextInput } from '@src/core-ui';
@@ -7,6 +7,7 @@ import { getData, scale, storeData, verticalScale } from '@src/helpers';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+// this is the initial state of the car that need to be added
 const carModel = {
     category: '',
     color: '',
@@ -19,6 +20,8 @@ export const Addvehicle = (props, { initialValues = carModel }) => {
     const [open, setOpen] = useState(false);
     const [car, setCar] = useState(initialValues);
     const [errors, setErrors] = useState({});
+
+    // there i am validating the all fields
     const validate = () => {
         let errs = {};
 
@@ -45,23 +48,25 @@ export const Addvehicle = (props, { initialValues = carModel }) => {
         setErrors(errs);
         return Object.keys(errs).length === 0;
     };
-
+    // here the data is stored in the local storage
+    // first it will check if theres any data in local storage it will get all data and push new data into it
+    // and if theres no data it simply adding data to the storage
     const handleSubmit = () => {
         if (validate()) {
-            getData('cars').then((cars)=>{
-                if(cars){
+            getData('cars').then((cars) => {
+                if (cars) {
                     let allCars = cars
                     allCars.push(car)
                     storeData('cars', allCars)
                     Alert.alert('Vehicle Added', 'New Vehicle Added to the database', [
-                        {text: 'OK', onPress: () => {props.navigation.goBack()}},
-                      ]);
+                        { text: 'OK', onPress: () => { props.navigation.goBack() } },
+                    ]);
 
-                }else{
+                } else {
                     storeData('cars', [car])
                     Alert.alert('Vehicle Added', 'New Vehicle Added to the database', [
-                        {text: 'OK', onPress: () => {props.navigation.goBack()}},
-                      ]);
+                        { text: 'OK', onPress: () => { props.navigation.goBack() } },
+                    ]);
 
                 }
             })
@@ -72,7 +77,7 @@ export const Addvehicle = (props, { initialValues = carModel }) => {
 
     return (
         <View style={{ flex: 1, }}>
-            <View style={{ height:verticalScale(80), backgroundColor: COLORS.PRIMARY, flexDirection: 'row', paddingBottom: verticalScale(6), alignItems: 'flex-end', justifyContent: 'space-between' }}>
+            <View style={{ height: verticalScale(80), backgroundColor: COLORS.PRIMARY, flexDirection: 'row', paddingBottom: verticalScale(6), alignItems: 'flex-end', justifyContent: 'space-between' }}>
                 <View style={{ flex: 1, justifyContent: 'flex-start' }}>
                     <TouchableOpacity onPress={() => { props.navigation.goBack() }}>
                         <Image
@@ -83,40 +88,40 @@ export const Addvehicle = (props, { initialValues = carModel }) => {
                     </TouchableOpacity>
                 </View>
                 <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                    <Text customStyle={{ color: COLORS.WHITE, fontWeight: 'bold',textAlign: 'center', fontSize: scale(16) }}>{'VEHICLE INFORMATION'}</Text>
+                    <Text customStyle={{ color: COLORS.WHITE, fontWeight: 'bold', textAlign: 'center', fontSize: scale(16) }}>{'VEHICLE INFORMATION'}</Text>
                 </View>
                 <View style={{ flex: 1, justifyContent: 'flex-end' }}>
 
                 </View>
             </View>
-          
+
             <View style={{ padding: scale(12), flex: 0.7 }}>
-         
-                    <View style={{ zIndex: 999 }}>
-                        <DropDownPicker
-                            items={[
-                                { label: 'SUV', value: 'suv' },
-                                { label: 'Sedan', value: 'sedan' },
-                                { label: 'Hatchback', value: 'hatchback' },
-                            ]}
-                            open={open}
-                            setOpen={setOpen}
-                            value={car.category}
-                            defaultValue={car.category}
-                            placeholder="Select category"
-                            containerStyle={styles.dropdownContainer}
-                            style={styles.dropdown}
-                            itemStyle={styles.dropdownItem}
-                            dropDownStyle={styles.dropdownList}
-                            onSelectItem={(item) => {
-                                setCar((prev) => ({ ...prev, category: item.value }))
-                              }}
-                        />
-                        {errors.category && (
-                            <Text customStyle={styles.error}>{errors.category}</Text>
-                        )}
-                    </View>
-                    <KeyboardAwareScrollView style={{flex:1}}
+
+                <View style={{ zIndex: 999 }}>
+                    <DropDownPicker
+                        items={[
+                            { label: 'SUV', value: 'suv' },
+                            { label: 'Sedan', value: 'sedan' },
+                            { label: 'Hatchback', value: 'hatchback' },
+                        ]}
+                        open={open}
+                        setOpen={setOpen}
+                        value={car.category}
+                        defaultValue={car.category}
+                        placeholder="Select category"
+                        containerStyle={styles.dropdownContainer}
+                        style={styles.dropdown}
+                        itemStyle={styles.dropdownItem}
+                        dropDownStyle={styles.dropdownList}
+                        onSelectItem={(item) => {
+                            setCar((prev) => ({ ...prev, category: item.value }))
+                        }}
+                    />
+                    {errors.category && (
+                        <Text customStyle={styles.error}>{errors.category}</Text>
+                    )}
+                </View>
+                <KeyboardAwareScrollView style={{ flex: 1 }}
                     keyboardShouldPersistTaps="always">
                     <TextInput
                         customStyle={styles.input}
@@ -162,7 +167,7 @@ export const Addvehicle = (props, { initialValues = carModel }) => {
                     {errors.registrationNo && (
                         <Text customStyle={styles.error}>{errors.registrationNo}</Text>
                     )}
-            </KeyboardAwareScrollView>
+                </KeyboardAwareScrollView>
 
             </View>
 

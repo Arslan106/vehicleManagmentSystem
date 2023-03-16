@@ -12,82 +12,87 @@ export const SignIn = (props) => {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
   const [password, setPassword] = useState('');
-  // render
-useEffect(() => {
-  getData('user').then((user)=>{
-    if(user){
-      props.navigation.dispatch(
-        CommonActions.reset({
-          index: 1,
-          routes: [
-            { name: ROUTES.HOME },
-          ],
-        })
-      );
-      // props.navigation.navigate(ROUTES.HOME)
-    }
-  })
-  
 
-}, [])
+  //  it will check if the user already login 
+  useEffect(() => {
+    getData('user').then((user) => {
+      if (user) {
+        props.navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [
+              { name: ROUTES.HOME },
+            ],
+          })
+        );
+        // props.navigation.navigate(ROUTES.HOME)
+      }
+    })
 
+
+  }, [])
+  // using this dummy api for logging
   const onBtnPress = () => {
     try {
-        if (!isValidEmail ||email !== '' && password !== "") {
-          fetch('http://restapi.adequateshop.com/api/authaccount/login', {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              email: email,
-              password: password
-            })
+      if (!isValidEmail || email !== '' && password !== "") {
+        fetch('http://restapi.adequateshop.com/api/authaccount/login', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password
           })
-            .then((response) => response.json())
-            .then(async(json) => {
-              // handle the API response here
-              if(json?.data){
-                storeData('user', json?.data)
-                props.navigation.dispatch(
-                  CommonActions.reset({
-                    index: 1,
-                    routes: [
-                      { name: ROUTES.HOME },
-                    ],
-                  })
-                );
-              }else{
-                Alert.alert(json.message)
-              }
-              console.log(json);
-            })
-            .catch((error) => {
-              Alert.alert(error)
-              // handle any errors here
-              // console.error(error);
-            });
-        } else {
-          Alert.alert('Please enter values')
-        }
-     
+        })
+          .then((response) => response.json())
+          .then(async (json) => {
+            // handle the API response here
+            if (json?.data) {
+              storeData('user', json?.data)
+              props.navigation.dispatch(
+                CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    { name: ROUTES.HOME },
+                  ],
+                })
+              );
+            } else {
+              Alert.alert(json.message)
+            }
+            console.log(json);
+          })
+          .catch((error) => {
+            Alert.alert(error)
+            // handle any errors here
+            // console.error(error);
+          });
+      } else {
+        Alert.alert('Please enter values')
+      }
+
 
     } catch (error) { }
   };
+
+  // validating email
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
+  // validating password
   const validatePassword = (password) => {
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
     return passwordRegex.test(password);
   }
+  // seting the email to the state
   const handleEmailChange = (email) => {
     setEmail(email);
     setIsValidEmail(validateEmail(email));
   }
-
+  // seting the password to the state
   const handlePasswordChange = (password) => {
     setPassword(password);
     setIsValidPassword(validatePassword(password));
@@ -109,14 +114,14 @@ useEffect(() => {
             value={email}
             onChangeText={handleEmailChange}
           />
-          {!isValidEmail && <Text customStyle={{color:COLORS.ERROR,fontSize:scale(10), padding:verticalScale(4)}}>Please enter a valid email address</Text>}
+          {!isValidEmail && <Text customStyle={{ color: COLORS.ERROR, fontSize: scale(10), padding: verticalScale(4) }}>Please enter a valid email address</Text>}
           <TextInput
             placeholder={'Password'}
             placeholderTextColor={COLORS.BLACK}
             value={password}
             onChangeText={handlePasswordChange}
           />
-         {/* {!isValidPassword && <Text customStyle={{color:COLORS.ERROR,fontSize:scale(10), padding:verticalScale(4)}}>Please enter a valid email password</Text>} */}
+          {/* {!isValidPassword && <Text customStyle={{color:COLORS.ERROR,fontSize:scale(10), padding:verticalScale(4)}}>Please enter a valid email password</Text>} */}
         </View>
         <Button onPress={onBtnPress}> Sign in</Button>
         <Footer footerText1={"Don't have an account?"} footerText2={' Sign up'} onPress={() => {
