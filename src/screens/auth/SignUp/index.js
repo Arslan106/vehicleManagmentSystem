@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import {Image, View} from 'react-native';
+import {Image, View, Alert} from 'react-native';
 import {Button, Footer} from '@src/commons';
 import {COLORS, IMAGES, ROUTES} from '@src/constants';
 import {Text, TextInput} from '@src/core-ui';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import { scale, verticalScale } from '@src/helpers';
+import { scale, storeData, verticalScale } from '@src/helpers';
 import { CommonActions } from '@react-navigation/native';
 
 export const SignUp = (props) => {
@@ -62,11 +62,11 @@ export const SignUp = (props) => {
                 })
               );
             }else{
-              Alert.alert(json.message)
+              Alert.alert('This user is already registerd')
             }
-            console.log(json);
           })
           .catch((error) => {
+            console.log(error);
             Alert.alert(error)
             // handle any errors here
             // console.error(error);
